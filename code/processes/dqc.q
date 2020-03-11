@@ -69,6 +69,7 @@ updresultstab:{[runtype;idnum;end;res;des;status;params;proc]                   
   if[c:count s:exec i from .dqe.results where id=idnum, procschk=proc,chkstatus=`started;                       /- obtain count of checks that will be updated
     .lg.o[`updresultstab;raze "run check id ",(string idnum)," update in results table with check status ",string status];
     `.dqe.results set update endtime:end,result:res,descp:enlist des,chkstatus:status,chkruntype:runtype from .dqe.results where id=idnum,procschk=proc,chkstatus=`started];
+    .lg.o[`updresultstab;"Adding ",string[count s]," indices to .dqe.tosavedown"];
     .dqe.tosavedown,:s;
   delete from `.dqe.compcounter where id=idnum;
   params:()!();
@@ -202,7 +203,7 @@ reruncheck:{[chkid]                                                             
 .servers.CONNECTIONS:`ALL                                                                                       /- set to nothing so that is only connects to discovery
 
 .u.end:{[pt]                                                                                                    /- setting up .u.end for dqe
-  .dqe.endofday[.dqe.dqcdbdir;.dqe.getpartition[];(`results;`configtable);`.dqe;.dqe.tosavedown];
+  .dqe.endofday[.dqe.dqcdbdir;.dqe.getpartition[];`results`configtable;`.dqe;.dqe.tosavedown];
   hdbs:distinct raze exec w from .servers.SERVERS where proctype=`dqcdb;                                        /- get handles for DBs that need to reload
   .dqe.notifyhdb[.os.pth .dqe.dqcdbdir]'[hdbs];                                                                 /- send message for DBs to reload
   .timer.removefunc'[exec funcparam from .timer.timer where `.dqe.runcheck in' funcparam];                      /- clear check function timers

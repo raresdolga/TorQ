@@ -15,7 +15,7 @@ init:{                                                                          
   .lg.o[`init;"searching for servers"];
   .servers.startup[];                                                                                           /- Open connection to discovery
   .timer.once[.eodtime.nextroll;(`.u.end;.dqe.getpartition[]);"Running EOD on Engine"];                         /- set timer to call EOD
-  .dqe.tosavedown:();                                                                                           /- store i numbers of rows to be saved down to DB
+  .dqe.tosavedown:()!();                                                                                        /- store i numbers of rows to be saved down to DB
   .dqe.configtimer[];
   st:.dqe.writedownperiodengine+ min .timer.timer[;`periodstart];
   et:.eodtime.nextroll-.dqe.writedownperiodengine;
@@ -27,8 +27,8 @@ updresultstab:{[proc;fn;params;tab;resinput]                                    
   if[not 11h=abs type params`col; params[`col]:`];
   `.dqe.resultstab insert (proc;fn1:last` vs fn;tab;params`col;resinput);
   s:exec i from .dqe.resultstab where procs=proc,funct=fn1,table=tab,column=params[`col];
-  .lg.o[`updresultstab;"Adding ",string[count s]," indices to .dqe.tosavedown"];
-  .dqe.tosavedown,:s;
+  .lg.o[`updresultstab;"Adding ",string[count s]," indices to .dqe.tosavedown for .dqe.resultstab"];
+  .dqe.tosavedown[`.dqe.resultstab],:s;
   }
 
 qpostback:{[proc;query;params;querytype;result]
@@ -60,7 +60,7 @@ configtimer:{[]
   }
 
 writedownengine:{
-  if[0=count .dqe.tosavedown;:()];
+  if[0=count .dqe.tosavedown`.dqe.resultstab;:()];
   .dqe.savedata[.dqe.dqedbdir;.dqe.getpartition[];.dqe.tosavedown;`.dqe;`resultstab];
   hdbs:distinct raze exec w from .servers.SERVERS where proctype=`dqedb;                                        /- get handles for DBs that need to reload
   .dqe.notifyhdb[.os.pth .dqe.dqedbdir]'[hdbs];                                                                 /- send message for DBs to reload

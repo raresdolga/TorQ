@@ -51,9 +51,11 @@ For WINDOWS users:
 The minimum block size for compression on windows is 16.
 
 \
-
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/logging.q"];
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/proc.q"];
 \d .cmp
-
+//system "l C:\\Users\\Rares\\Documents\\CodeProjects\\kdb\\TorQ\\utils\\logging.q"
+/system "l C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/logging.q"
 inputcsv:@[value;`inputcsv;first .proc.getconfigfile["compressionconfig.csv"]];
 
 if[-11h=type inputcsv;inputcsv:string inputcsv];
@@ -185,5 +187,5 @@ hashfilecheck:{[compressedFile;filetoCompress;sf]
     $[3.6<=.z.K;
         if[77 = type sf; system "r ", (last ":" vs string compressedFile),"# ", (last ":" vs string filetoCompress),"#";
             .[{system "r ", (last ":" vs string x),"## ", (last ":" vs string y),"##"};(compressedFile;filetoCompress);.lg.o[`compression;"File does not have enumeration domain"]]];
-        / if running below 3.6, nested list types will be 77h+t and will not have double hash file    
+        / if running below 3.6, nested list types will be 77h+t and will not have double hash file
         if[78 <= type sf; system "r ", (last ":" vs string compressedFile),"# ", (last ":" vs string filetoCompress),"#"]]}

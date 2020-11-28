@@ -1,6 +1,7 @@
 // cache the result of functions in memory
 
 \d .cache
+CONFIG: (!) . (enlist `cp; enlist .z.p)
 
 // the maximum size of the cache in MB
 maxsize:@[value;`.cache.maxsize;100]
@@ -8,7 +9,7 @@ maxsize:@[value;`.cache.maxsize;100]
 // the maximum size of any individual result set in MB
 maxindividual:@[value;`.cache.maxindividual;50]
 
-// make sure the maxindividual isn't bigger than maxsize 
+// make sure the maxindividual isn't bigger than maxsize
 maxindividual:maxsize&maxindividual
 
 MB:2 xexp 20
@@ -33,7 +34,7 @@ add:{[function;id;status]
 	res:value function;
 	$[(maxindividual*MB)>size:-22!res;
 		// check if we need more space to store this item
-		[now:.proc.cp[];
+		[now:CONFIG[`cp];
 		if[0>requiredsize:(maxsize*MB) - size+sum exec size from cache; evict[neg requiredsize;now]];
 		// Insert to the cache table
 		`.cache.cache upsert (id;now;now;size);
@@ -43,8 +44,8 @@ add:{[function;id;status]
 		// Update the performance
 		trackperf[id;status;now]];
 		// Otherwise just log it as an addfail - the result set is too big
-		trackperf[id;`fail;.proc.cp[]]];
-	// Return the result	
+		trackperf[id;`fail; CONFIG[`cp]]];
+	// Return the result
 	res}
 
 // Drop some ids from the cache
@@ -53,12 +54,12 @@ drop:{[ids]
 	delete from `.cache.cache where id in ids;
 	.cache.results : ids _ .cache.results;
 	}
-	
+
 // evict some items from the cache - need to clear enough space for the new item
 // evict the least recently accessed items which make up the total size
 // feel free to write a more intelligent cache eviction policy !
 evict:{[reqsize;currenttime]
-	r:select from 
+	r:select from
 		(update totalsize:sums size from `lastaccess xasc select lastaccess,id,size from cache)
 	where prev[totalsize]<reqsize;
 	drop[r`id];
@@ -75,7 +76,7 @@ execute:{[func;age]
 		[r:first r;
 		// We need to check the age - if the specified age is greater than the actual age, return it
 		// else delete it
-  		$[age > (now:.proc.cp[]) - r`lastrun;
+  		$[age > (now:CONFIG[`cp]) - r`lastrun;
 			// update the cache stats, return the cached result
 		 	[update lastaccess:now from `.cache.cache where id=r`id;
 			 trackperf[r`id;`hit;now];
@@ -91,8 +92,8 @@ getperf:{update function:.cache.funcs[id] from .cache.perf}
 
 \
 
-// examples	
-\d . 
+// examples
+\d .
 f:{system"sleep 2";20+x}
 g:{til x}
 // first time should be slow

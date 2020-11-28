@@ -11,4 +11,6 @@ u:all `pub`sub`init in key `.u
 publish:$[u;.u.pub;{[tab;data]}]
 subscribe:$[u;.u.sub;{[tab;syms]}]
 init:$[u;.u.init;{[]}]
-initialise:{.ps.init[]; .ps.initialised:1b}
+initialise:{.ps.init[];} // .ps.initialised:1b}
+
+\d .

@@ -42,14 +42,14 @@ find:{[s;p;c]
 	// Check the input type
 	if[-11h=type s;$[null s; s:enlist"*";s:"*",(string s),"*"]];
 	if[not 10h=abs type s:s,(); '"input type must be a symbol or string (character array)"];
- 
+
  	// select from the fullapi on the name matches
 	// select by so we only show the table and not the variable (tables appear in both the variable list and the table list)
  	$[c;
 		select from fullapi[] where name like s,public in p,i=(last;i) fby name;
-		select from fullapi[] where lower[name] like lower s,public in p,i=(last;i) fby name]} 
+		select from fullapi[] where lower[name] like lower s,public in p,i=(last;i) fby name]}
 
-// find functions 
+// find functions
 // f = find all
 // p = find public
 // u = find all public, user defined
@@ -61,8 +61,8 @@ u:{[x] delete from p[x] where namespace in `.q`.Q`.h`.o}
 // s = search string
 // c = context sensitive
 search:{[s;c]
-	if[not 10h=type s,:(); '"search value must be a string (character array)"]; 
-	raze {[f;s;c] 
+	if[not 10h=type s,:(); '"search value must be a string (character array)"];
+	raze {[f;s;c]
 		res:([]function:enlist f;definition:enlist def:last value value f);
 		$[not 10h=type def; 0#res;
 		  $[c;
@@ -94,15 +94,17 @@ exportallconfig:{exportconfig torqnamespaces}
 mem:{`size xdesc update sizeMB:`int$size%2 xexp 20 from update size:{-22!value x}each variable from ([]variable:raze varnames[;;0b] .' allns[] cross $[x;"vb";enlist"v"])}
 m:{mem[1b]}
 
-// If in the error trap, find the name of the function you are in 
+// If in the error trap, find the name of the function you are in
 // e.g. .api.whereami[.z.s]
 whereami:{funcs first where x~/:value each funcs:raze varnames[;"f";0b] each reverse allns[]}
+
+\d .
 
 \
 / examples
 
 \c 23 200
-// add some api entries to have some detail 
+// add some api entries to have some detail
 add[`.api.f;1b;"Find a function/variable/table/view in the current process";"[string:search string]";"table of matching elements"]
 add[`.api.fp;1b;"Find a public function/variable/table/view in the current process";"[string:search string]";"table of matching public elements"]
 add[`.api.add;1b;"Add a function to the api description table";"[symbol:the name of the function; boolean:whether it should be called externally; string:the description; dict or string:the parameters for the function;string: what the function returns]";"null"]

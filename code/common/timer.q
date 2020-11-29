@@ -1,3 +1,6 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/logging.q"];
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/proc.q"];
+
 // Functionality to extend the timer
 
 \d .timer

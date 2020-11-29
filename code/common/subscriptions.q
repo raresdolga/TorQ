@@ -1,3 +1,8 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/code/common/timer.q"]
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/logging.q"];
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/proc.q"];
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/code/handlers/trackservers.q"];
+
 /-script to create subscriptions, e.g. to tickerplant
 
 \d .sub

@@ -1,3 +1,6 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/logging.q"];
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/code/common/dbwriteutils.q"];
+
 \d .merge
 
 /- function to get additional partition(s) defined by parted attribute in sort.csv

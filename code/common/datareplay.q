@@ -1,3 +1,4 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/logging.q"];
 \d .datareplay
 
 // Generate times between two input times in p intervals
@@ -10,7 +11,7 @@ getBuckets:{[s;e;p](s+p*til(ceiling 1+e%p)-(ceiling s%p))}
 tableDataToDataStream:{[params]
   // Sort table by time column.
   params[`t]:params[`tc] xasc delete date from params[`t];
-  
+
   // get all times from table
   t_times:params[`t][params[`tc]];
 
@@ -18,20 +19,20 @@ tableDataToDataStream:{[params]
     [ // if there is an interval, bucket messages into this interval
       // make bukets of ten second intervals
       times:getBuckets[params[`sts];params[`ets];params[`interval]];
-       
+
       // put start time in fornt of t_times
       t_times:params[`sts],t_times;
 
       //Get places to cut
       cuts:distinct t_times bin times;
       cuts:cuts where cuts>-1;
-      
+
       // fill first cut
       if[0<>first cuts;cuts:0,cuts];
-     
+
       //cut table by time interval
       msgs:cuts cut params[`t];
- 
+
       // get times that match data
       time:{first x[y]}[;params[`tc]] each msgs;
 
@@ -41,11 +42,11 @@ tableDataToDataStream:{[params]
     // if there is no intevral, cut by distinct time.
     ([]
       time:distinct t_times;
-      msg:{(`upd;x;$[1<count y;flip y;first y])}[params[`tn]] each 
+      msg:{(`upd;x;$[1<count y;flip y;first y])}[params[`tn]] each
           (where differ t_times) cut params[`t]
     )
   ]
-        
+
  };
 
 
@@ -62,7 +63,7 @@ tableToDataStream:{[params]
             ,$[count params[`syms];enlist (in;`sym;enlist params[`syms]);()] //if syms is empty, omit sym in syms
             ,$[count params[`where];params[`where];()] // custom where clause (optional)
             ,enlist (within;params[`tc];(enlist;params[`sts];params[`ets])); // time within (sts;ets)
-  
+
   // Have hdb evaluate select statement.
   t:@[params[`h];
       (eval;(?;params[`tn];enlist wherec;0b;()));

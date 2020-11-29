@@ -1,3 +1,9 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/code/common/pubsub.q"]
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/code/common/timer.q"]
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/logging.q"];
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/proc.q"];
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/code/handlers/trackservers.q"];
+
 // Heartbeating
 // All processes can publish heartbeats.  This allows downstream processes to check they are available and not blocked
 // If if the connection is still valid the process may be unavailable

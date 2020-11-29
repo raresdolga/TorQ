@@ -117,12 +117,12 @@ cleanup:{if[count w0:exec w from`.servers.SERVERS where not .dotz.livehn w;
         update endp:.proc.cp[],lastp:.proc.cp[],w:0Ni from`.servers.SERVERS where w in w0];
     if[AUTOCLEAN;delete from`.servers.SERVERS where not .dotz.liveh w,(.proc.cp[]^endp)<.proc.cp[]-.servers.RETAIN];}
 
-/ add a new server for current session 
+/ add a new server for current session
 addnthawc:{[name;proctype;hpup;attributes;W;checkhandle]
     if[checkhandle and not isalive:.dotz.liveh W;'"invalid handle"];
     cleanup[];
     $[not hpup in (exec hpup from .servers.SERVERS) inter (exec hpup from .servers.nontorqprocesstab);
-        `.servers.SERVERS insert(name;proctype;lower hpup;W;0i;$[isalive;.proc.cp[];0Np];.proc.cp[];0Np;attributes); 
+        `.servers.SERVERS insert(name;proctype;lower hpup;W;0i;$[isalive;.proc.cp[];0Np];.proc.cp[];0Np;attributes);
         .lg.o[`conn;"Removed double entries: name->", string[name],", proctype->",string[proctype],", hpup->\"",string[hpup],"\""]];
     W
     }
@@ -172,11 +172,11 @@ autodiscovery:{if[DISCOVERYRETRY>0; .servers.retrydiscovery[]]}
 
 // Attempt to make a connection for specified row ids
 retryrows:{[rows]
-    //function a checks if the handle passed is empty and also invokes checknontorqattr function 
-    //which checks if .proc.getattributes is defined on the nontorqprocess and executes it 
+    //function a checks if the handle passed is empty and also invokes checknontorqattr function
+    //which checks if .proc.getattributes is defined on the nontorqprocess and executes it
     //only if it is defined
     a:{$[not null x;@[x;({.proc.getattributes[]};::);()!()];()!()]};
- 
+
     // opencon, amends global tables, cannot be used inside of a select statement
     handles:.servers.opencon each exec hpup from`.servers.SERVERS where i in rows;
     update lastp:.proc.cp[],w:handles from`.servers.SERVERS where i in rows;
@@ -227,7 +227,7 @@ addprocs:{[connectiontab;procs;connect]
     // we've dropped some items - maybe there are updated attributes
     if[not count[res]=count connectiontab;
         if[`attributes in cols connectiontab;
-            .servers.SERVERS:.servers.SERVERS lj 3!select procname,proctype,hpup,attributes from connectiontab where not ([]procname;proctype;hpup) in select procname,proctype,hpup from .servers.SERVERS]] 
+            .servers.SERVERS:.servers.SERVERS lj 3!select procname,proctype,hpup,attributes from connectiontab where not ([]procname;proctype;hpup) in select procname,proctype,hpup from .servers.SERVERS]]
     // if we have a match where the hpup is the same, but different name/type, then remove the old details
     removerows exec i from `.servers.SERVERS where hpup in exec hpup from res;
     register[res;;connect] each $[procs~`ALL;exec distinct proctype from res;procs,()];
@@ -365,8 +365,7 @@ startupdepnamecycles:startupdepcyclestypename[;.servers.reqprocnamesnotconn;;];
 startupdependent:startupdepcyclestypename[;.servers.reqproctypesnotconn;;0W];
 
 pc:{[result;W] update w:0Ni,endp:.proc.cp[] from`.servers.SERVERS where w=W;cleanup[];result}
-
-.z.pc:{.servers.pc[x y;y]}.z.pc;
+.z.pc:{.servers.pc[x y;y]} .z.pc;
 
 if[enabled;
     if[DISCOVERYRETRY > 0; .timer.repeat[.proc.cp[];0Wp;DISCOVERYRETRY;(`.servers.retrydiscovery;`);"Attempt reconnections to the discovery service"]];

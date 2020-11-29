@@ -1,3 +1,4 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/logging.q"];
 // use -usage flag to print usage info
 \d .proc
 

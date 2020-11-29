@@ -1,3 +1,5 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/proc.q"];
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/logging.q"];
 // taken from http://code.kx.com/wiki/Cookbook/Timezones
 
 \d .tz
@@ -13,6 +15,8 @@ lg:{[tz;z] $[0>type z;first;(::)]@exec gmtDateTime+adjustment from aj[`timezoneI
 // GMT from local
 gl:{[tz;z] $[0>type z;first;(::)]@exec localDateTime-adjustment from aj[`timezoneID`localDateTime;([]timezoneID:tz;localDateTime:z,());select timezoneID,localDateTime,adjustment from t]};
 
+// ############################ TODO: FIX THIS ###################################################
+/
 // timezone switch
 // d = destination time zone
 // s = source timezone
@@ -23,6 +27,7 @@ ttz:{[d;s;z]lg[d;gl[s;z]]}
 dg:lg[default]
 // GMT from default
 gd:gl[default]
+\
 
 \
 \d .

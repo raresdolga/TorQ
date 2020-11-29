@@ -1,3 +1,6 @@
+// ############################ imports ############################
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/logging.q"];
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/proc.q"];
 // DATADOG CHECKS
 
 //Create datadog namespace
@@ -7,7 +10,7 @@
 enabled:@[value;`enabled;0b]
 
 //default to disabled - datadog agent used
-webreq:@[value;`webreq;0b] 
+webreq:@[value;`webreq;0b]
 
 //define dogstatsd_port
 dogstatsd_port:@[value;`dogstatsd_port;getenv[`DOGSTATSD_PORT]]
@@ -27,7 +30,7 @@ handlers:(`$())!()
 isok:{$[.proc.proctype in key .dg.handlers;.dg.handlers .proc.proctype;1b]}
 
 //define sendmetric and sendevent functions using datadog agent
-.dg.sendevent:{[event_title;event_text;tags;alert_type] 
+.dg.sendevent:{[event_title;event_text;tags;alert_type]
   $[.z.o like "l*";
     system"event_title=",event_title,"; event_text=","\"",event_text,"\"","; tags=","\"#",$[0h=type tags;","sv tags;tags],"\"",";alert_type=",alert_type,"; ","echo \"_e{${#event_title},${#event_text}}:$event_title|$event_text|#$tags|t:$alert_type\" |nc -4u -w0 127.0.0.1 ",dogstatsd_port;
     .lg.w[`sendevent;"Currently only linux operating systems are supported to send events"]]

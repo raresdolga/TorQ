@@ -1,3 +1,4 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/logging.q"];
 //This script will cut off any slow subscibers if they exceed a memory limit
 
 \d .subcut

@@ -1,3 +1,4 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/code/common/timezone.q"];
 / - system eodtime configuraion
 / - loaded into and used in the tp and pdb processes
 \d .eodtime

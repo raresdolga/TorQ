@@ -1,3 +1,4 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/logging.q"];
 / - functions for checking and repairing (if required) a tickerplant log file
 \d .tplog
 
@@ -23,7 +24,7 @@ check: {[logfile;lastmsgtoreplay]
 		[.lg.o[`tplog.check;"The logfile is corrupt, attempting to write a good log"];repair[logfile]]
 	]
 	};
-	
+
 repair: {[logfile]
 	/ - append ".good" to the "good" log file
 	goodlog: `$ string[logfile],".good";
@@ -37,7 +38,7 @@ repair: {[logfile]
 	/ - return goodlog
 	goodlog
 	};
-	
+
 repairover: {[logfile;goodlogh;d]
 	/ - logfile (symbol) is the handle to the logsfile
 	/ - goodlogh (int) is  the handle to the "good" log file
@@ -45,18 +46,18 @@ repairover: {[logfile;goodlogh;d]
 	.lg.o[`tplog.repairover;"Reading logfile with an offset of : ",string[d`start]," bytes and a chunk of size : ",string[d`size]," bytes"];
 	x:read1 logfile,d`start`size;			/ - read <size> bytes from <start>
 	u: ss[`char$x;UPDMSG];					/ - find the start points of upd messages
-	if[not count u;							/ - nothing in this block 
+	if[not count u;							/ - nothing in this block
 		if[hcount[logfile] <= sum d`start`size;:d];	/ - EOF - we're done
 		:@[d;`start;+;d`size]];				/ - move on <size> bytes
 	m: u _ x;								/ - split bytes into msgs
 	mz: 0x0 vs' `int$ 8 + ms: count each m;	/ - message sizes as bytes
 	hd: @[HEADER;7 6 5 4;:;] each mz;		/ - set msg size at correct part of hdr
 	g: @[(1b;)@-9!;;(0b;)@] each hd,'m;		/ - try and deserialize each msg
-	goodlogh g[;1] where k:g[;0];			/ - write good msgs to the "good" log 
+	goodlogh g[;1] where k:g[;0];			/ - write good msgs to the "good" log
 	if[not any k;							/ - saw msg(s) but couldn't read
 		if[MAXCHUNK <= d`size;				/ - read as much as we dare, give up
 			:@[d;`start`size;:;(sum d`start`size;CHUNK)]];
 		:@[d;`size;*;2]];					/ - read a bigger chunk
 	ns: d[`start] + sums[ms] last where k;	/ - move to the end of the last good msg
-	:@[d;`start`size;:;(ns;CHUNK)];       
+	:@[d;`start`size;:;(ns;CHUNK)];
 	};

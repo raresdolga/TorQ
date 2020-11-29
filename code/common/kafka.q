@@ -1,3 +1,5 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/logging.q"];
+
 \d .kafka
 
 // configuration
@@ -9,7 +11,7 @@ lib:`$getenv[`KDBLIB],"/",string[.z.o],"/kafkaq";
 if[.kafka.enabled;
   libfile:hsym ` sv lib,$[.z.o like "w*"; `dll; `so];
   libexists:not ()~key libfile;
-  if[not .kafka.libexists; .lg.e[`kafka;"no such file ",1_string libfile]]; 
+  if[not .kafka.libexists; .lg.e[`kafka;"no such file ",1_string libfile]];
   if[.kafka.libexists;
 	/ initconsumer[server;optiondict]
 	/ initialise consumer object with the specified config options. Required in order to call 'subscribe'
@@ -19,11 +21,11 @@ if[.kafka.enabled;
 	/ initpr	oducer[server;optiondict]
 	/ e.g. initproducer[`localhost:9092;`queue.buffering.max.ms`batch.num.messages!`5`1]
 	initproducer: lib 2:  (`initproducer;2);
-	
+
 	/ cleanupconsumer[]
 	/ disconnect and free up consumer object, stop and subscription thread
 	cleanupconsumer: lib 2: (`cleanupconsumer;1);
-	
+
 	/ cleanupproducer[]
 	/ disconnect and free up producer object
 	cleanupproducer: lib 2: (`cleanupproducer;1);

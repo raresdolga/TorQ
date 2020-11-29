@@ -1,3 +1,4 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/code/common/json.k"];
 \d .grafana
 
 // user defined column name of time column
@@ -52,7 +53,7 @@ search:{[rqt]
   symtabs:tabs where sym in'cols each tabs;
   timetabs:tabs where timecol in'cols each tabs;
   rsp:string tabs;
-  
+
   if[count timetabs;
     rsp,:s1:prefix["t";string timetabs];
     rsp,:s2:prefix["g";string timetabs];
@@ -83,7 +84,7 @@ tbfunc:{[rqt]
   rqt: raze rqt[`targets]`target;
   symname:0b;
   // if f.t.func, drop first 4 chars
-  rqt:0!value $[isfunc[rqt] & istab 2_rqt; 4_rqt; 
+  rqt:0!value $[isfunc[rqt] & istab 2_rqt; 4_rqt;
                 isfunc rqt; 2_rqt;
                 istab rqt; [rqt: `$del vs rqt; if[2<count rqt; symname: rqt 2]; rqt 1];
                 rqt];
@@ -96,7 +97,7 @@ tbfunc:{[rqt]
  };
 
 // process a timeseries request and return in Json format, takes in query and information dictionary
-tsfunc:{[x]	
+tsfunc:{[x]
   targ: raze x[`targets]`target;
   / split arguments
   numargs:count args:$[isfunc targ;(0;1+targ?del)cut targ:2_targ;`$del vs targ];
@@ -120,7 +121,7 @@ tsfunc:{[x]
     (2=numargs)and`g~tyargs;graphnosym[coln;rqt];
     (2=numargs)and`t~tyargs;tablenosym[coln;rqt];
     (4=numargs)and`o~tyargs;othersym[args;rqt];
-    (3=numargs)and`o~tyargs;othernosym[args 2;rqt]; 
+    (3=numargs)and`o~tyargs;othernosym[args 2;rqt];
     (2=numargs)and`o~tyargs;othernosym[coln except timecol;rqt];
     `$"Wrong input"]
  };

@@ -1,3 +1,4 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/proc.q"];
 \d .checks
 
 numformat:{reverse "," sv 3 cut reverse string `long$x}
@@ -6,7 +7,7 @@ formatdict:{"<table>",(raze {"<tr><td><b>",(string x),"</b></td><td> | ",(string
 
 tablecount:{[tablelist; period; currenttime; timecol; required]
     .checks.errs::();
-    
+
     counts:{[period;currenttime;timecol;x] count where period > currenttime - (0!value x)timecol}[period;currenttime;timecol] each tablelist,:();
 
     if [any c:counts < required;

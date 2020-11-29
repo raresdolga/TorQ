@@ -1,3 +1,5 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/utils/proc.q"];
+
 / - this scrip contains the code which is used to apply data manipulation at save down, sort and apply attributes to data and garbage collect
 / - typically used by the TorQ process that persist data to disk e.g. rdb, tickerlogreplay, wdb, ...
 
@@ -18,7 +20,7 @@ getsortcsv:{[file]
 	if[null file; file:defaultfile];
 	params:@[
             {.lg.o[`init;"retrieving sort settings from ",string x];("SSSB";enlist",")0: x};
-            file; 
+            file;
             {[x;e] '"failed to open ",string[x],". The error was : ",e ;}[file]
         ];
 	/-check the correct columns have been included in csv file
@@ -29,15 +31,15 @@ getsortcsv:{[file]
 	/-set sortparams globally
 	@[`.sort;`params;:;params];
 	};
-	
+
 / - this is main sort function that will be called of each table to be sorted
-/-function to reload, sort and save tables 
+/-function to reload, sort and save tables
 /- this function can be passed a table name of a pair of (tablename;table directory(s))
 sorttab:{[d]
     // try to read in the sort configuration from the default location
     if[0=count params; getsortcsv defaultfile];
     .lg.o[`sort;"sorting the ",(st:string t:first d)," table"];
-	/ - get the sort configuration	
+	/ - get the sort configuration
 	sp:$[count tabsortparams:select from params where tabname=t;
 			[.lg.o[`sorttab;"Sort parameters have been retrieved for : ",st];tabsortparams];
 		count defaultsortparams:select from params where tabname=`default;
@@ -45,9 +47,9 @@ sorttab:{[d]
 		/ - else escape, no sort params have been specified
 			[.lg.o[`sorttab;"No sort parameters have been found for this table (",st,").  The table will not be sorted"];:()]];
 	/ - loop through for each directory
-	{[sp;dloc] / - sort the data 
+	{[sp;dloc] / - sort the data
 		if[count sortcols: exec column from sp where sort, not null column;
-			.lg.o[`sortfunction;"sorting ",string[dloc]," by these columns : ",", " sv string sortcols]; 
+			.lg.o[`sortfunction;"sorting ",string[dloc]," by these columns : ",", " sv string sortcols];
 			.[xasc;(sortcols;dloc);{[sortcols;dloc;e] .lg.e[`sortfunction;"failed to sort ",string[dloc]," by these columns : ",(", " sv string sortcols),".  The error was: ",e]}[sortcols;dloc]]];
 		if[count attrcols: select column, att from sp where not null att;
 			/-apply attribute(s)
@@ -55,7 +57,7 @@ sorttab:{[d]
 	}[sp] each distinct (),last d;
 	.lg.o[`sort;"finished sorting the ",st," table"];
 	};
-	
+
 /-function to apply attributes to columns
 applyattr:{[dloc;colname;att]
 	.lg.o[`applyattr;"applying ",string[att]," attr to the ",string[colname]," column in ",string dloc];
@@ -64,7 +66,7 @@ applyattr:{[dloc;colname;att]
 		{[dloc;colname;att;e] .lg.e[`applyattr;"unable to apply ",string[att]," attr to the ",string[colname]," column in the this directory : ",string[dloc],". The error was : ",e];}[dloc;colname;att]
 	]
 	};
-	
+
 / - these functions are common across the TorQ processes that persist save to the data base
 \d .save
 
@@ -72,17 +74,17 @@ applyattr:{[dloc;colname;att]
 savedownmanipulation:()!();
 
 /- manipulate a table at save down time
-manipulate:{[t;x] 
- $[t in key savedownmanipulation; 
+manipulate:{[t;x]
+ $[t in key savedownmanipulation;
   @[savedownmanipulation[t];x;{.lg.e[`manipulate;"save down manipulation failed : ",y];x}[x]];
   x]};
 
-/- post eod/replay, this is called after the date has been persisted to disk and sorted and 
+/- post eod/replay, this is called after the date has been persisted to disk and sorted and
 /- takes a directory (typically hdb directory) and partition value as parameters
-postreplay:{[d;p]		
-	
+postreplay:{[d;p]
+
 	};
-	
+
 / - functions for running and descriptively logging garbage collection
 \d .gc
 

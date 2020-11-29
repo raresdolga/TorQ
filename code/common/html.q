@@ -1,3 +1,5 @@
+loadf["C:/Users/Rares/Documents/CodeProjects/kdb/TorQ/code/common/json.k"];
+
 \d .html
 
 // set html home
@@ -56,15 +58,14 @@ jstsfromt:{"j"$"t"$x}
 jstsfromm:{jstsfromts `date$x}
 
 // mapping of types to formatting function
-typemap:12 13 14 15 16 17 18 19h!(jstsiso8601;jstsfromm;jstsfromts;jstsiso8601;jstsfromt;jstsfromt;jstsfromt;jstsfromt); 
+typemap:12 13 14 15 16 17 18 19h!(jstsiso8601;jstsfromm;jstsfromts;jstsiso8601;jstsfromt;jstsfromt;jstsfromt;jstsfromt);
 
 // given a table, format each of the columns that need formatted
 jsformat:{ k:cols x; flip k !(y value t:type each x)@'value x:flip 0!x}
 
 // EVALUATION FUNCTION
-
 // evaluate: used to evaluate front end input data
-// Arg: dictionary decoded front end JSON  
+// Arg: dictionary decoded front end JSON
 // format should be `func`arg1`arg2 ... `arg8!(function;arg1;arg2;...;arg3)
 // all args except arg1 are optional
 execdict:{$[not `func in key x;'"no func in dictionary";1=count key x;(value x`func) @ 1;1<count key x;(value x`func) . value x _ `func;()]}
@@ -91,7 +92,7 @@ getport:{string system"p"}
 
 // read a page, replace the host and port details
 // GLEN: MYKDBSERVER Must be an absolute URL. Since the javascript is run on client side it interprets localhost or 127.0.0.2 as a URL referring to a client's own computer
-// Host must be formatted as a string for javascript, single or double quotes must be added to each side of it "server.aquaq.co.uk". 
+// Host must be formatted as a string for javascript, single or double quotes must be added to each side of it "server.aquaq.co.uk".
 // Otherwise javascript will try to find a variable called server and it's property aquaq, it's property co etc.
 readpagereplaceHP:{replace[readpage[x];`MYKDBSERVER`MYKDBPORT!("\"",(string ipa .z.a),"\"";getport[])]}
 
@@ -104,7 +105,7 @@ readpagereplaceHP:{replace[readpage[x];`MYKDBSERVER`MYKDBPORT!("\"",(string ipa 
 // example would be in the html5 source (lets assume the html5 source is called monitor.html)
 // if you put MYKDBSERVER:MYKDBPORT for the websocket connection in monitor.html
 // the create a function of
-// monitorui:.html.readpagereplaceHP["index.html"] 
+// monitorui:.html.readpagereplaceHP["index.html"]
 // then from the browser do
 // http://monitorhost:monitorport/.non?monitorui[]
 // then it should host it's own ui
